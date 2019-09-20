@@ -1,0 +1,30 @@
+@{
+Html.RenderPartial("../Shared/_Header.cshtml");
+}
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-3">
+            <partial name="../Shared/_Navigation.cshtml" />
+        </div>
+        <div class="col-9">
+            <form action="/Message/SendMessage" method="POST">
+                <div class="form-group">
+                    <label for="exampleFormControlInput1">Người nhận</label>
+                    <input type="text" name="receiver" class="form-control" id="exampleFormControlInput1"
+                        placeholder="name@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlInput1">Tiêu đề</label>
+                    <input type="text" name="title" class="form-control" id="exampleFormControlInput1"
+                        placeholder="Title">
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Nội dung</label>
+                    <textarea class="form-control" name="content" id="exampleFormControlTextarea1" rows="5"
+                        placeholder="Content"></textarea>
+                </div>
+                <button class="btn btn-primary">Gửi</button>
+            </form>
+        </div>
+    </div>
+</div>

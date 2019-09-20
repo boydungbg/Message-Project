@@ -1,0 +1,23 @@
+User
+    id: int
+    username: varchar
+    password: varchar
+
+Message
+    id: int
+    title: varchar
+    content: text
+    senderId: int
+    sendTime: Date
+
+Inbox
+    id: int
+    messageId: int
+    receiverId: int
+    isDeleted: boolean
+
+Outbox
+    id: int
+    messageId: int
+    senderId: int
+    isDeleted: boolean
