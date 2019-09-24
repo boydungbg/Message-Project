@@ -35,3 +35,6 @@ D:\PROGRAMER\Homework\Project-Email\obj\Debug\netcoreapp2.2\Razor\Views\Shared\_
 D:\PROGRAMER\Homework\Project-Email\obj\Debug\netcoreapp2.2\Razor\Views\Message\Compose.g.cshtml.cs
 D:\PROGRAMER\Homework\Project-Email\obj\Debug\netcoreapp2.2\Razor\Views\Message\Inbox.g.cshtml.cs
 D:\PROGRAMER\Homework\Project-Email\obj\Debug\netcoreapp2.2\Razor\Views\Message\OutBox.g.cshtml.cs
+D:\PROGRAMER\Homework\Project-Email\obj\Debug\netcoreapp2.2\Razor\Views\Message\Trashcan.g.cshtml.cs
+D:\PROGRAMER\Homework\Project-Email\obj\Debug\netcoreapp2.2\Razor\Views\Message\EmailDetailInbox.g.cshtml.cs
+D:\PROGRAMER\Homework\Project-Email\obj\Debug\netcoreapp2.2\Razor\Views\Message\EmailDetailOutbox.g.cshtml.cs

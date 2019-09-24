@@ -11,6 +11,7 @@ using Project_Email.Models;
 
 namespace Project_Email.Controllers
 {
+    [Authentication]
     public class HomeController : Controller
     {
         private MyDbContext dbContext;
@@ -19,12 +20,9 @@ namespace Project_Email.Controllers
         {
             this.dbContext = context;
         }
-        [Authentication]
         public IActionResult Index()
         {
-            var userid = HttpContext.Session.GetInt32("userId");
-            ViewBag.user = dbContext.Users.FirstOrDefault(u => u.UserID == userid).FullName;
-            return View();
+            return Redirect("/Message/Inbox");
         }
         public IActionResult Privacy()
         {

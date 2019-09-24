@@ -10,6 +10,7 @@ using Project_Email.Models;
 
 namespace Project_Email.Controllers
 {
+    [Authentication]
     public class MessageController : Controller
     {
         private MyDbContext dbContext;
@@ -17,30 +18,66 @@ namespace Project_Email.Controllers
         {
             this.dbContext = context;
         }
-        [Authentication]
+
+        public IActionResult EmailDetailInbox(int messageID)
+        {
+            if (messageID == 0 || messageID.ToString() == null)
+            {
+                return Redirect("/Message/Inbox");
+            }
+            var userid = HttpContext.Session.GetInt32("userId");
+            ViewBag.user = dbContext.Users.FirstOrDefault(u => u.UserID == userid).FullName;
+            ManagerMessage managerMessage = new ManagerMessage(dbContext);
+            ViewBag.count = managerMessage.GetCountMessageStatus(dbContext.Users.FirstOrDefault(u => u.UserID == userid).UserID.Value);
+            ViewBag.MessageDetail = managerMessage.GetMessageDetail(dbContext.Users.FirstOrDefault(u => u.UserID == userid).UserID.Value, messageID);
+            if (ViewBag.MessageDetail == null)
+            {
+                return Redirect("/Message/Inbox");
+            }
+            return View();
+        }
+
         public IActionResult Compose()
         {
             var userid = HttpContext.Session.GetInt32("userId");
             ViewBag.user = dbContext.Users.FirstOrDefault(u => u.UserID == userid).FullName;
+            ManagerMessage managerMessage = new ManagerMessage(dbContext);
+            ViewBag.count = managerMessage.GetCountMessageStatus(dbContext.Users.FirstOrDefault(u => u.UserID == userid).UserID.Value);
             return View();
         }
-        [Authentication]
+
         public IActionResult Outbox()
         {
             var userid = HttpContext.Session.GetInt32("userId");
             ViewBag.user = dbContext.Users.FirstOrDefault(u => u.UserID == userid).FullName;
-            ViewBag.listOutbox = GetListMessageOutbox(dbContext.Users.FirstOrDefault(u => u.UserID == userid).UserID.Value);
+            ManagerMessage managerMessage = new ManagerMessage(dbContext);
+            ViewBag.listOutbox = managerMessage.GetListMessageOutbox(dbContext.Users.FirstOrDefault(u => u.UserID == userid).UserID.Value);
+            managerMessage = new ManagerMessage(dbContext);
+            ViewBag.count = managerMessage.GetCountMessageStatus(dbContext.Users.FirstOrDefault(u => u.UserID == userid).UserID.Value);
             return View();
         }
-        [Authentication]
+
         public IActionResult Inbox()
         {
             var userid = HttpContext.Session.GetInt32("userId");
             ViewBag.user = dbContext.Users.FirstOrDefault(u => u.UserID == userid).FullName;
-            ViewBag.listInbox = GetListMessageInbox(dbContext.Users.FirstOrDefault(u => u.UserID == userid).UserID.Value);
+            ManagerMessage managerMessage = new ManagerMessage(dbContext);
+            ViewBag.listInbox = managerMessage.GetListMessageInbox(dbContext.Users.FirstOrDefault(u => u.UserID == userid).UserID.Value);
+            ViewBag.count = managerMessage.GetCountMessageStatus(dbContext.Users.FirstOrDefault(u => u.UserID == userid).UserID.Value);
             return View();
         }
-        [Authentication]
+
+        public IActionResult Trashcan()
+        {
+            var userid = HttpContext.Session.GetInt32("userId");
+            ViewBag.user = dbContext.Users.FirstOrDefault(u => u.UserID == userid).FullName;
+            ManagerMessage managerMessage = new ManagerMessage(dbContext);
+            ViewBag.listTrashcan = managerMessage.GetListMessageTrashcan(dbContext.Users.FirstOrDefault(u => u.UserID == userid).UserID.Value);
+            ViewBag.count = managerMessage.GetCountMessageStatus(dbContext.Users.FirstOrDefault(u => u.UserID == userid).UserID.Value);
+            return View();
+        }
+
+        [HttpPost]
         public IActionResult SendMessage(string receiver, string title, string content)
         {
             var userid = HttpContext.Session.GetInt32("userId");
@@ -60,7 +97,7 @@ namespace Project_Email.Controllers
                         }
                     }
                 }
-                Message message = new Message(null, receiver, title, content, senderID, null, DateTime.Now, 0, null, null);
+                Message message = new Message(null, receiver, title, content, senderID, null, DateTime.Now, null, null);
                 dbContext.Message.Add(message);
                 dbContext.SaveChanges();
                 int messageID = dbContext.Message.Count();
@@ -71,7 +108,7 @@ namespace Project_Email.Controllers
                     {
                         return Redirect("/Message/Compose");
                     }
-                    Inbox inbox = new Inbox(null, messageID, UserReciver.UserID.Value, 0, null);
+                    Inbox inbox = new Inbox(null, messageID, UserReciver.UserID.Value, 0, 0, null);
                     dbContext.Inbox.Add(inbox);
                     dbContext.SaveChanges();
                 }
@@ -81,17 +118,63 @@ namespace Project_Email.Controllers
             }
             return Redirect("/Message/Compose");
         }
-        public List<Message> GetListMessageOutbox(int senderID)
+        public IActionResult DeleteMessageInbox(int MessageID)
         {
-            Users users = new Users();
-            users.ListMessage = dbContext.Message.FromSql("Select * from Message where SenderID = '" + senderID + "';").ToList();
-            return users.ListMessage;
+            if (MessageID != 0 || MessageID.ToString() != null)
+            {
+                var userid = HttpContext.Session.GetInt32("userId");
+                int ReceiverID = dbContext.Users.FirstOrDefault(u => u.UserID == userid).UserID.Value;
+                Inbox inbox = dbContext.Inbox.LastOrDefault(i => i.MessageID == MessageID && i.ReceiverID == ReceiverID);
+                if (inbox != null)
+                {
+                    inbox.IsDeleted = 1;
+                    dbContext.SaveChanges();
+                }
+                Outbox outbox = dbContext.Outbox.LastOrDefault(i => i.MessageID == MessageID && i.SenderId == ReceiverID);
+                if (outbox != null)
+                {
+                    outbox.IsDeleted = 1;
+                    dbContext.SaveChanges();
+                }
+            }
+            return Redirect("/Message/Inbox");
         }
-        public List<Message> GetListMessageInbox(int ReceiverID)
+        public IActionResult DeleteMessageOutbox(int MessageID)
         {
-            Users users = new Users();
-            users.ListMessage = dbContext.Message.FromSql("SELECT m.MessageID,m.ListReceiver,m.Title,m.Content,m.SendTime,m.SenderID,m.StatusMessage FROM inbox AS i INNER JOIN message AS m ON i.MessageID = m.MessageID where i.ReceiverID = '" + ReceiverID + "';").ToList();
-            return users.ListMessage;
+            if (MessageID != 0 || MessageID.ToString() != null)
+            {
+                var userid = HttpContext.Session.GetInt32("userId");
+                int senderID = dbContext.Users.FirstOrDefault(u => u.UserID == userid).UserID.Value;
+                Outbox outbox = dbContext.Outbox.LastOrDefault(i => i.MessageID == MessageID && i.SenderId == senderID);
+                if (outbox != null)
+                {
+                    outbox.IsDeleted = 1;
+                    dbContext.SaveChanges();
+                }
+                Inbox inbox = dbContext.Inbox.LastOrDefault(i => i.MessageID == MessageID && i.ReceiverID == senderID);
+                if (inbox != null)
+                {
+                    inbox.IsDeleted = 1;
+                    dbContext.SaveChanges();
+                }
+            }
+            return Redirect("/Message/Outbox");
+        }
+
+        public IActionResult UpdateStatusMessage(int messageID)
+        {
+            if (messageID != 0 || messageID.ToString() != null)
+            {
+                var userid = HttpContext.Session.GetInt32("userId");
+                int userID = dbContext.Users.FirstOrDefault(u => u.UserID == userid).UserID.Value;
+                Inbox inbox = dbContext.Inbox.FirstOrDefault(i => i.MessageID == messageID && i.ReceiverID == userID);
+                if (inbox != null)
+                {
+                    inbox.StatusMessage = 1;
+                    dbContext.SaveChanges();
+                }
+            }
+            return Redirect("/Message/EmailDetailInbox?messageID=" + messageID + "");
         }
     }
 }

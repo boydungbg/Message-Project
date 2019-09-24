@@ -1,0 +1,27 @@
+@{
+Html.RenderPartial("../Shared/_Header.cshtml");
+}
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-3">
+            <partial name="../Shared/_Navigation.cshtml" />
+        </div>
+        <div class="col-9">
+            <div class="row">
+                <h4>@ViewBag.MessageDetail.Title</h4>
+            </div>
+            <div class="row">
+                <b>@ViewBag.MessageDetail.Sender.FullName</b>@ViewBag.MessageDetail.Sender.Email
+                <div>tới tôi <br></div>
+                <div>@ViewBag.MessageDetail.SendTime</div>
+            </div>
+            <div class="row">
+                <div>
+                    <p>
+                        @ViewBag.MessageDetail.Content
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

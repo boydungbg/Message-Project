@@ -2996,6 +2996,11 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "Views\\Message\\Trashcan.cshtml",
+      "TargetPath": "Views\\Message\\Trashcan.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "Views\\Shared\\_Layout.cshtml",
       "TargetPath": "Views\\Shared\\_Layout.cshtml",
       "FileKind": "mvc"
@@ -3016,8 +3021,18 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "Views\\Message\\EmailDetailOutbox.cshtml",
+      "TargetPath": "Views\\Message\\EmailDetailOutbox.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "Views\\User\\Login.cshtml",
       "TargetPath": "Views\\User\\Login.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "Views\\Message\\EmailDetailInbox.cshtml",
+      "TargetPath": "Views\\Message\\EmailDetailInbox.cshtml",
       "FileKind": "mvc"
     },
     {

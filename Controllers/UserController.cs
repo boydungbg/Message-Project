@@ -48,8 +48,8 @@ namespace Project_Email.Controllers
         [HttpPost]
         public IActionResult CreateACC(string name, string fullname, string email, string pass, string confirmpass)
         {
-            var user = dbContext.Users.FirstOrDefault(u => u.UserName == name);
-            if (user == null || user.UserName != name)
+            var user = dbContext.Users.FirstOrDefault(u => u.UserName == name || u.Email == email);
+            if (user == null)
             {
                 user = new Users(null, name, fullname, pass, email, DateTime.Now, null);
                 dbContext.Users.Add(user);

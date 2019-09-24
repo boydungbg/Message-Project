@@ -9,7 +9,7 @@ Html.RenderPartial("../Shared/_Header.cshtml");
         <div class="col-9">
             <div class="row text-white bg-dark email-list">
                 <div class="col-3">
-                    Người nhận
+                    Người gửi
                 </div>
                 <div class="col-3">
                     Tiêu đề
@@ -18,24 +18,19 @@ Html.RenderPartial("../Shared/_Header.cshtml");
                     Nội dung
                 </div>
             </div>
-            @foreach(var item in ViewBag.listOutbox)
+            @foreach(var item in ViewBag.listTrashcan)
             {
             <div>
-                <a  class="card-link email-hover">
+                <a class="card-link email-hover">
                     <div class="row email-list">
                         <div class="col-3  text-truncate">
-                           Tới: @item.Message.ListReceiver
+                           <img src="~/rubbish-bin-delete-button.png" alt="bin" width="16px" height="16px">@item.Sender.FullName
                         </div>
                         <div class="col-3  text-truncate">
-                            @item.Message.Title
+                            @item.Title
                         </div>
                         <div class="col-5  text-truncate">
-                            @item.Message.Content
-                        </div>
-                        <div class="col-1">
-                               <button class="bin" onclick="window.location.href='/Message/DeleteMessageOutbox?MessageID=@item.MessageID'">
-                                <img src="~/rubbish-bin-delete-button.png" alt="bin" width="16px" height="16px">
-                            </button>
+                            @item.Content
                         </div>
                     </div>
                 </a>

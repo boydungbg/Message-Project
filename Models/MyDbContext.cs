@@ -37,7 +37,6 @@ namespace Project_Email.Model
                 entity.Property(m => m.Content);
                 modelBuilder.Entity<Message>().HasOne<Users>(m => m.Sender).WithMany(u => u.ListMessage).HasForeignKey(e => e.SenderID);
                 entity.Property(m => m.SendTime);
-                entity.Property(m => m.StatusMessage);
             });
             modelBuilder.Entity<Inbox>(entity =>
             {
@@ -45,6 +44,7 @@ namespace Project_Email.Model
                 modelBuilder.Entity<Inbox>().HasOne<Message>(ib => ib.Message).WithMany(m => m.ListInbox).HasForeignKey(ib => ib.MessageID);
                 entity.Property(ib => ib.ReceiverID);
                 entity.Property(ib => ib.IsDeleted);
+                 entity.Property(ib => ib.StatusMessage);
             });
             modelBuilder.Entity<Outbox>(entity =>
         {

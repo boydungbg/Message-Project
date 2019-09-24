@@ -76,17 +76,19 @@ body {
 }
 
 .email-list {
-  padding: 1rem;
+  width: 100%;
+  padding: 0.8rem;
   border-bottom: 1.5px solid whitesmoke;
 }
 
-.email-hover :hover {
-  background-color: gray;
-  z-index: 1;
+.bin {
+  border: none;
+  background-color: white;
 }
 
 .bin :hover {
-  transition-delay: 1s;
+  transition-delay: 0.6s;
   border: 1px solid;
   border-radius: 100%;
+  width: 30px;
 }

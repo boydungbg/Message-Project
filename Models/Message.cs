@@ -16,11 +16,11 @@ namespace Project_Email.Models
         public int SenderID { get; set; }
         public Users Sender { get; set; }
         public DateTime SendTime { get; set; }
-        public int StatusMessage { get; set; }
+
         public List<Inbox> ListInbox { get; set; }
         public List<Outbox> ListOutbox { get; set; }
         public Message() { }
-        public Message(int? messageID, string listReceiver ,string title, string content, int senderID, Users sender, DateTime sendTime, int statusMessage, List<Inbox> listInbox, List<Outbox> listOutbox)
+        public Message(int? messageID, string listReceiver ,string title, string content, int senderID, Users sender, DateTime sendTime, List<Inbox> listInbox, List<Outbox> listOutbox)
         {
             this.MessageID = messageID;
             this.ListReceiver = listReceiver;
@@ -29,7 +29,6 @@ namespace Project_Email.Models
             this.SenderID = senderID;
             this.Sender = sender;
             this.SendTime = sendTime;
-            this.StatusMessage = statusMessage;
             this.ListInbox = listInbox;
             this.ListOutbox = listOutbox;
         }
